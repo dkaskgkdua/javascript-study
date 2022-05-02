@@ -1,0 +1,63 @@
+# BigInt
+
+* 주의 ! 스펙에 추가된 지 얼마 안됨 *
+`BigInt`는 길이의 제약 없이 정수를 다룰 수 있게 해주는 숫자형이다.
+정수 리터럴 끝에 `n`을 붙이거나 함수 `BigInt`를 호출하면 문자열이나 숫자를 가지고 `BigInt`타입의 값을 만들 수 있다.
+```js
+const bigint = 1234567890123456789012345678901234567890n;
+
+const sameBigint = BigInt("1234567890123456789012345678901234567890");
+
+const bigintFromNumber = BigInt(10); // 10n과 동일
+```
+
+### 수학 연산자
+- `BigInt`는 대게 일반 숫자와 큰 차이 없이 사용 가능하다.
+```js
+console.log(1n + 2n); // 3
+console.log(5n / 2n); // 2 (소수점 없다)
+```
+- 다만 일반 숫자와 섞어서 사용할 수 없다.
+```js
+console.log(1n + 2); // Error
+
+// 만약 써야 한다면... 명시적으로
+let bigint = 1n;
+let number = 2;
+
+console.log(bigint + BigInt(number)); // 3
+console.log(Number(bigint) + number); // 3
+
+// 만약 bigint 값이 너무 큰데 Number로 형변환 하면 뒤에 비트는 자동을 잘려 나간다.
+```
+
+- 단항 덧셈 연산자는 bigint에 사용할 수 없다.
+```js
+let bigint = 1n;
+console.log(+bigint);
+```
+
+### 비교 연산자
+비교 연산자 `>`, `<`는 bigint와 일반 숫자 모두에 사용할 수 있습니다.
+```js
+console.log( 2n > 1n ); // true
+console.log( 2n > 1 ); // true
+
+// 하지만 equals는 식별이 가능하다.
+console.log( 1 == 1n ); // true
+console.log( 1 === 1n); // false
+```
+
+### 논리 연산
+bigint는 `if`안이나 다른 논리 연산자와 함께 사용할 때 일반 숫자와 동일하게 행동한다.
+`if`안에서 `0n`은 falsy이고 다른 값들은 truthy로 평가된다.
+```js
+if(0n) {
+ // 절대 실행 안됨
+}
+// ||, && 등의 논리 연산자를 bigint에 적용할 때도 일반 숫자와 비슷하게 동작한다.
+console.log( 1n || 2); // 1
+console.log( 0n || 2); // 2
+```
+
+* 현재 제대로 된 bigint의 폴리필은 나오지 않음.
